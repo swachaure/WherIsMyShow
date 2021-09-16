@@ -1,0 +1,2 @@
+﻿1 -add-migration FirstMigration
+2-update-database
