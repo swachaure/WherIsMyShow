@@ -1,0 +1,123 @@
+﻿@model List<WhereIsMyShow.Models.ShowViewModel>
+
+@{
+    ViewData["Title"] = "ShowList";
+}
+<style>
+    .clear-rating{
+        display:none!important;
+    }
+</style>
+<h3 class="text-info text-center">List of Shows</h3>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-info btn-sm">Create New Show</a>
+    </p>
+}
+    <table id="myTable" class="table table-bordered table-info">
+        <thead>
+            <tr>
+                <th>
+                    Show Id
+                </th>
+                <th>
+                    Show Name
+                </th>
+                <th>
+                    Genre
+                </th>
+
+                <th>
+                    Start Date
+                </th>
+
+                <th>
+                    Image
+                </th>
+                <th>
+                    Ratings
+                </th>
+                <th>
+                    My Rating
+                </th>
+
+                <th>
+                    Book
+                </th>
+                @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                {
+                    <th>
+                        Details
+                    </th>
+                }
+                </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            
+                {
+              
+                var Genre = @Model[i].Genre.Contains("|") ? @Model[i].Genre.Split('|')[0] : @Model[i].Genre;
+            <tr>
+
+                <td>@Model[i].ShowId</td>
+                <td> @Model[i].ShowName</td>
+                <td>@Genre</td>
+
+                <td> @Model[i].StartDate.ToShortDateString() </td>
+
+                <td>
+                    <img src="~/img/@Model[i].ShowImage" alt="img-blur-shadow" class="img-fluid shadow border-radius-xl">
+                </td>
+                <td class="dt-body-center">
+                    <input value="@Model[i].TotalRating" data-readonly="true" class="rating-loading totalrating">
+
+                </td>
+                <td class="dt-body-center">
+                    <form asp-action="RatingsUpdate" method="post">
+
+                        <input name="ShowId" type="hidden" value=" @Model[i].ShowId" />
+                        <input value=" @Model[i].RatingStars" name="RatingStars" required class="rating-loading userrating" data-size="sm" data-step="1">
+                        <span asp-validation-for=" @Model[i].RatingStars" class="text-danger"></span>
+                        <button type="submit" class="btn btn-primary btn-sm">Rate it</button>&nbsp;
+                    </form>
+
+
+                </td>
+
+
+                <td>
+                    <a class="btn btn-dark btn-sm" asp-controller="Booking" asp-action="Index" asp-route-id=" @Model[i].ShowId">
+                        Book
+                    </a>
+                </td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                {
+                    <td>
+                        <a asp-controller="Show" asp-action="ShowDetails" asp-route-id="@Model[i].ShowId" class="btn btn-sm btn-primary mr-1"> Detail </a>
+                    </td>
+                }
+                </tr>
+                }
+            </tbody>
+
+    </table>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#myTable').dataTable({
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-center dt-header-center' }
+            ]
+        });
+        $('.userrating').rating();
+        $('.totalrating').rating({ displayOnly: true, step: 0.5 });
+
+    });
+</script>
+
+

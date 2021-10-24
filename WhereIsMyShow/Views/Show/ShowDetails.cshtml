@@ -1,0 +1,66 @@
+﻿@model ShowViewModel
+
+@{
+    ViewData["Title"] = " Show Details";
+}
+@{
+    var showrating = Model;
+}
+
+
+<div class="card mb-3">
+    <div class="card-header text-info text-center">
+        <h2>  @showrating.ShowName </h2>
+    </div>
+    <div class="card-body text-center">
+        <b> Genre</b>     <p class="text-info">@showrating.Genre</p>
+        <b>  Description </b>   <p class="text-info">@showrating.Description</p>
+        <b>  Start Date </b>   <p class="text-info">@showrating.StartDate.ToShortDateString() </p>
+        <b>  Start Time </b>   <p class="text-info">@showrating.StartTime </p>
+        <b>  End Time </b>   <p class="text-info">@showrating.EndTime </p>
+        <b> Ratings </b>
+        <input id="totalrating" value="@showrating.TotalRating" data-readonly="true" class="rating-loading">
+     
+        <b> Your Ratings </b>   
+        <form asp-action="RatingsUpdate" method="post" >
+            <input asp-for="ShowId" type="hidden" />
+            <input id="userrating" value="@showrating.RatingStars" asp-for="RatingStars" required class="rating-loading" data-step="1">
+            <span asp-validation-for="RatingStars" class="text-danger"></span>
+            <hr>
+            <button type="submit" class="btn btn-primary btn-sm">Rate it</button>&nbsp;
+            <button type="reset" class="btn btn-outline-secondary btn-sm">Reset</button>
+        </form>
+        <br />
+        <img src="~/img/@showrating.ShowImage" class="img-fluid" />
+
+    </div>
+    <div class="card-footer  text-center">
+        <div style="display:inline-flex;">
+            @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+            {
+                <a asp-controller="Show" asp-action="Edit" asp-route-id="@showrating.ShowId" class="btn btn-sm btn-primary mr-3">Edit</a>
+
+                <form asp-action="Delete" asp-route-id="@showrating.ShowId" method="post">
+                    <button type="submit" class="btn btn-sm btn-danger mr-3" onclick="return confirm('Are you sure you want to delete Show @showrating.ShowName ?')">
+                        Delete
+                    </button>
+
+                </form>
+
+            }
+            <a class="btn btn-dark btn-sm" asp-controller="Booking" asp-action="Index" asp-route-id="@showrating.ShowId">
+                Book Show
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#userrating').rating();
+        $('#totalrating').rating({ displayOnly: true, step: 0.5 });
+
+
+    });
+</script>

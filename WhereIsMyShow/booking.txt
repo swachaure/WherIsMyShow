@@ -1,0 +1,6 @@
+Hello  We have succesfully Approved your booking. Details are as follows 
+ Name = Swapnil Chaure  
+ Phone = +61449146804 
+ Email Address = swachaure@gmail.com 
+ Booking Date = 5/11/2021 
+ Number of Tickets =  5  

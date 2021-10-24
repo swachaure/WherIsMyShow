@@ -1,0 +1,90 @@
+﻿@model IEnumerable<WhereIsMyShow.Models.Booking>
+
+@{
+    ViewData["Title"] = "User Booking";
+}
+
+<h3 class="text-center text-info">User Booking</h3>
+
+
+<table id="myTable" class="table table-bordered table-info">
+    <thead>
+        <tr>
+            <th>
+                User Name
+            </th>
+            <th>
+                Show Name
+            </th>
+            <th>
+                Booking Date
+            </th>
+
+            
+            <th>
+                Number of Tickets
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Phone Number
+            </th>
+            <th>
+                Email Address
+            </th>
+
+            <th>
+                Status
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            var status = booking.Status == 0 ? "Pending" : "Approved";
+        <tr>
+            <td>
+                @booking.ApplicationUser.Name
+            </td>
+            <td>@booking.Show.ShowName</td>
+
+
+            <td>@booking.BookingDate.ToShortDateString() </td>
+            <td>@booking.NumberOfTickets</td>
+            <td>@booking.Name</td>
+            <td>@booking.PhoneNumber</td>
+             <td>@booking.EmailAddress</td>
+            <td>@status</td>
+            <td>
+
+                <form asp-action="Delete" asp-route-id="@booking.BookingId" method="post">
+                    <button type="submit" class="btn btn-sm btn-danger mr-3" onclick="return confirm('Are you sure you want to delete this booking ?')">
+                        Delete
+                    </button>
+
+                </form>
+            </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#myTable').dataTable({
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+
+
+    });
+</script>
+
+
